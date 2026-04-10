@@ -15,7 +15,7 @@ export default async function DogDetailPage({ params }: Props) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/auth/login");
+  if (!user) return redirect("/auth/login");
 
   const { data: dog } = await supabase
     .from("dogs")
@@ -24,7 +24,7 @@ export default async function DogDetailPage({ params }: Props) {
     .eq("user_id", user.id)
     .single();
 
-  if (!dog) notFound();
+  if (!dog) return notFound();
 
   const { years, months } = calcDogAge(dog.birthdate);
   const humanAge = calcHumanAge(years + months / 12, dog.size);
