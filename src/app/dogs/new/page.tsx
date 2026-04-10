@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { DogSize } from "@/types/database";
+import type { Dog, DogSize } from "@/types/database";
 
 const SIZES: { value: DogSize; label: string; hint: string }[] = [
   { value: "small", label: "小型犬", hint: "〜10kg" },
@@ -43,7 +43,8 @@ export default function NewDogPage() {
       return;
     }
 
-    const { data, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: rawData, error } = await (supabase as any)
       .from("dogs")
       .insert({
         user_id: user.id,
@@ -55,6 +56,7 @@ export default function NewDogPage() {
       })
       .select()
       .single();
+    const data = rawData as Dog | null;
 
     if (error) {
       setError("登録に失敗しました。もう一度お試しください。");
@@ -62,7 +64,7 @@ export default function NewDogPage() {
       return;
     }
 
-    router.push(`/dogs/${data.id}`);
+    router.push(`/dogs/${data!.id}`);
   }
 
   return (

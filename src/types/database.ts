@@ -58,32 +58,42 @@ export interface Database {
         Row: Dog;
         Insert: Omit<Dog, "id" | "created_at">;
         Update: Partial<Omit<Dog, "id" | "created_at">>;
+        Relationships: [];
       };
       weight_logs: {
         Row: WeightLog;
         Insert: Omit<WeightLog, "id">;
         Update: Partial<Omit<WeightLog, "id">>;
+        Relationships: [];
       };
       vaccinations: {
         Row: Vaccination;
         Insert: Omit<Vaccination, "id">;
         Update: Partial<Omit<Vaccination, "id">>;
+        Relationships: [];
       };
       vet_visits: {
         Row: VetVisit;
         Insert: Omit<VetVisit, "id">;
         Update: Partial<Omit<VetVisit, "id">>;
+        Relationships: [];
       };
       meal_logs: {
         Row: MealLog;
         Insert: Omit<MealLog, "id">;
         Update: Partial<Omit<MealLog, "id">>;
+        Relationships: [];
       };
       walk_logs: {
         Row: WalkLog;
         Insert: Omit<WalkLog, "id">;
         Update: Partial<Omit<WalkLog, "id">>;
+        Relationships: [];
       };
     };
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 }

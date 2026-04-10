@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { calcDogAge, calcHumanAge, sizeLabel } from "@/lib/dogAge";
 import WeightLogSection from "@/components/WeightLogSection";
+import type { Dog, WeightLog } from "@/types/database";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -17,12 +18,13 @@ export default async function DogDetailPage({ params }: Props) {
   } = await supabase.auth.getUser();
   if (!user) return redirect("/auth/login");
 
-  const { data: dog } = await supabase
+  const { data: dogData } = await supabase
     .from("dogs")
     .select("*")
     .eq("id", id)
     .eq("user_id", user.id)
     .single();
+  const dog = dogData as Dog | null;
 
   if (!dog) return notFound();
 
@@ -32,12 +34,13 @@ export default async function DogDetailPage({ params }: Props) {
   // 直近30日の体重ログ
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const { data: weightLogs } = await supabase
+  const { data: weightLogsData } = await supabase
     .from("weight_logs")
     .select("*")
     .eq("dog_id", dog.id)
     .gte("recorded_at", thirtyDaysAgo.toISOString())
     .order("recorded_at", { ascending: true });
+  const weightLogs = weightLogsData as WeightLog[] | null;
 
   return (
     <div className="min-h-screen">

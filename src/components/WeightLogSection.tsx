@@ -21,7 +21,8 @@ export default function WeightLogSection({ dogId, initialLogs }: Props) {
     setError(null);
 
     const supabase = createClient();
-    const { data, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: rawData, error } = await (supabase as any)
       .from("weight_logs")
       .insert({
         dog_id: dogId,
@@ -30,8 +31,9 @@ export default function WeightLogSection({ dogId, initialLogs }: Props) {
       })
       .select()
       .single();
+    const data = rawData as WeightLog | null;
 
-    if (error) {
+    if (error || !data) {
       setError("記録に失敗しました");
     } else {
       setLogs((prev) => [...prev, data]);

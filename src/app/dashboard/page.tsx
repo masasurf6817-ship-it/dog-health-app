@@ -13,11 +13,12 @@ export default async function DashboardPage() {
 
   if (!user) return redirect("/auth/login");
 
-  const { data: dogs } = await supabase
+  const { data: dogsData } = await supabase
     .from("dogs")
     .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: true });
+  const dogs = dogsData as Dog[] | null;
 
   return (
     <div className="min-h-screen">
